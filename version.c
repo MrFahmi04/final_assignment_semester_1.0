@@ -66,6 +66,7 @@ void tambah_barang(int id, char nama_barang[], float harga, int stok, char deskr
     jumlah_barang++;
     
      printf("Barang berhasil ditambahkan!\n");
+     printf("======================================\n");
 }
 
 // Fungsi untuk mencari barang berdasarkan nama atau ID
@@ -277,6 +278,7 @@ void masukkan_nama_merchant() {
     if (nama_merchant[0] == '\0') {
         strcpy(nama_merchant, "Kelompok 2 auto");
     }
+    printf("======================================\n");
 }
 
 
@@ -295,6 +297,7 @@ void masukkan_nama_kasir() {
     if (nama_kasir[0] == '\0') {
         strcpy(nama_kasir, "kasir auto");
     }
+     printf("======================================\n");
 }
 
 
@@ -349,6 +352,7 @@ void cek_data_barang(){
         tampilkan_daftar_barang();
         search_barang();
     } else {
+         printf("\nMerchant anda tidak memiliki barang, silahkan tambahkan data barang");
        query_barang();
     }
 }
@@ -409,7 +413,7 @@ void inisialisasi_program() {
         
         printf("Inisiasi Selesai...");
         
-      
+        printf("\n======================================\n");
     }
 }
 
@@ -420,6 +424,9 @@ void inisialisasi_program() {
 int main() {
     // Menambahkan beberapa contoh barang
    inisialisasi_program();
+    tambah_barang(1, "Barang A", 10.0, 50, "Deskripsi Barang A");
+    tambah_barang(2, "Barang B", 20.0, 30, "Deskripsi Barang B");
+    tambah_barang(1, "Barang A", 10.0, 50, "Deskripsi Barang A");
   //contoh_penggunaan_model();
     // ... (kode lainnya)
   cek_data_barang();
