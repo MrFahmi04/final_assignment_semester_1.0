@@ -267,7 +267,7 @@ void hapus_keranjang(int id_keranjang) {
                 keranjang_belanja[j] = keranjang_belanja[j + 1];
             }
             jumlah_keranjang--;
-            printf("Keranjang berhasil dihapus.\n");
+          //  printf("Keranjang berhasil dihapus.\n");
             return;
         }
     }
@@ -1349,8 +1349,12 @@ void cari_barang_dan_tampilkan(char nama_cari[], int id_cari) {
     int ditemukan = 0;
     int found_once = 0;
 
+    // Pastikan jumlah_barang dan daftar_barang didefinisikan dengan benar
+    // int jumlah_barang;
+    // Barang daftar_barang[jumlah_barang];
+
     for (int i = 0; i < jumlah_barang; i++) {
-        if ((nama_cari != NULL && strcasestr(daftar_barang[i].nama_barang, nama_cari) != NULL) ||
+        if ((nama_cari[0] != '\0' && strcasestr(daftar_barang[i].nama_barang, nama_cari) != NULL) ||
             (id_cari != -1 && daftar_barang[i].id == id_cari)) {
             ditemukan = 1;
 
@@ -1362,12 +1366,13 @@ void cari_barang_dan_tampilkan(char nama_cari[], int id_cari) {
             printf("%d. %s - Harga: %.2f - Stok: %d\n", daftar_barang[i].id, daftar_barang[i].nama_barang, daftar_barang[i].harga, daftar_barang[i].stok);
 
             printf("\033[1;33m===========================\033[0m\n");
-            
-            query_keranjang();
         } 
     }
 
-    if (!ditemukan) {
+    // Panggil query_keranjang di luar loop jika ditemukan barang
+    if (ditemukan) {
+        query_keranjang();
+    } else {
         printf("Barang tidak ditemukan.\n");
     }
 }
