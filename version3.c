@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include <time.h>
 // Definisi struktur untuk barang
 typedef struct {
     int id;
@@ -268,7 +267,7 @@ void hapus_keranjang(int id_keranjang) {
                 keranjang_belanja[j] = keranjang_belanja[j + 1];
             }
             jumlah_keranjang--;
-            printf("Keranjang berhasil dihapus.\n");
+          //  printf("Keranjang berhasil dihapus.\n");
             return;
         }
     }
@@ -1010,105 +1009,9 @@ void prompt_edit_jumlah(int id_keranjang) {
 
 
 
-int cetak_tanggal() {    
-    // Mendapatkan waktu saat ini    
-     time_t t; 
-         struct tm *info;   
-           char buffer[80];  
-               time(&t); 
-                   info = localtime(&t);   
-                      // Format tanggal dd-mm-yyyy  
-                         strftime(buffer, sizeof(buffer), "%d-%m-%Y", info);    
-                           // Mencetak tanggal ke layar   
-                             printf("%s\n", buffer); 
-    }
+
+
 void struk(int id_keranjang, int nominal_bayar) {
-
-    char filename[50];
-    FILE *file;
-
-    // Generate filename with id_keranjang and current date
-    sprintf(filename, "%d-%s.txt", id_keranjang, cetak_tanggal());
-
-    file = fopen(filename, "w");
-      if (file == NULL) {
-        perror("Error opening file");
-        return;
-    }
-
-    // Redirect standard output to the file
-    freopen(filename, "w", stdout);
-
-    printf("\n\033[1;33m===========================\n");
-    printf("   \033[1mStruk Belanja\n");
-    printf("\033[1;33m===========================\033[0m\n");
-
-    // Variables to store total information
-    float total_harga_keseluruhan = 0.0;
-    int total_barang = 0;
-    int total_quantity = 0;
-
-    printf("-------------------------------\n");
-    printf("ID Keranjang: %d\n", id_keranjang);
-    printf("-------------------------------\n");
-
-    for (int i = 0; i < jumlah_keranjang; i++) {
-        if (keranjang_belanja[i].id_keranjang == id_keranjang) {
-            printf("\nID Barang: %d. %s\n", keranjang_belanja[i].id_barang, keranjang_belanja[i].nama_barang);
-            printf("Harga per item: %.2f\n", keranjang_belanja[i].harga);
-            printf("Quantity: %d\n", keranjang_belanja[i].quantity);
-
-            // Calculate subtotal for the item
-            float subtotal_harga_item = keranjang_belanja[i].harga * keranjang_belanja[i].quantity;
-            printf("Subtotal harga item: %.2f\n", subtotal_harga_item);
-
-            // Accumulate totals
-            total_harga_keseluruhan += subtotal_harga_item;
-            total_barang++;
-            total_quantity += keranjang_belanja[i].quantity;
-        }
-    }
-
-    float taxes = total_harga_keseluruhan * 0.11;
-    float total_harga_keseluruhan_after_tax = total_harga_keseluruhan + taxes;
-    int kembalian = nominal_bayar - total_harga_keseluruhan_after_tax;
-    int total_kembalian = kembalian;
-
-    printf("Total Barang: %d\n", total_barang);
-    printf("Total Quantity: %d\n", total_quantity);
-    printf("-------------------------------\n");
-    printf("HARGA NON PPN: %.2f\n", total_harga_keseluruhan);
-    printf("-------------------------------\n");
-    printf("HARGA DENGAN PPN: %.2f\n", total_harga_keseluruhan_after_tax);
-    printf("-------------------------------\n");
-    printf("NOMINAL BAYAR: %d\n", nominal_bayar);
-
-    if (total_kembalian > 0) {
-        printf("KEMBALI: %d\n", total_kembalian);
-    } else if(total_kembalian == 0){
-        printf("KEMBALI: 0");
-    }
-
-    if (total_kembalian >= 0) {
-        printf("STATUS: LUNAS\n");
-        
-    } else {
-        printf("PEMBAYARAN GAGAL\n");
-        query_checkout(id_keranjang);
-    }
-    //printf("\n-------------------------------\n");
-    //printf("==============================\n");
-
-      fclose(file);
-    freopen("CON", "w", stdout);  // On Windows, use "CON", on Linux use "/dev/tty"
-
-}
-
-
-
-
-
-void struk_final_backup(int id_keranjang, int nominal_bayar) {
     printf("\n\033[1;33m===========================\n");
     printf("   \033[1mStruk Belanja\n");
     printf("\033[1;33m===========================\033[0m\n");
@@ -1446,8 +1349,12 @@ void cari_barang_dan_tampilkan(char nama_cari[], int id_cari) {
     int ditemukan = 0;
     int found_once = 0;
 
+    // Pastikan jumlah_barang dan daftar_barang didefinisikan dengan benar
+    // int jumlah_barang;
+    // Barang daftar_barang[jumlah_barang];
+
     for (int i = 0; i < jumlah_barang; i++) {
-        if ((nama_cari != NULL && strcasestr(daftar_barang[i].nama_barang, nama_cari) != NULL) ||
+        if ((nama_cari[0] != '\0' && strcasestr(daftar_barang[i].nama_barang, nama_cari) != NULL) ||
             (id_cari != -1 && daftar_barang[i].id == id_cari)) {
             ditemukan = 1;
 
@@ -1459,12 +1366,13 @@ void cari_barang_dan_tampilkan(char nama_cari[], int id_cari) {
             printf("%d. %s - Harga: %.2f - Stok: %d\n", daftar_barang[i].id, daftar_barang[i].nama_barang, daftar_barang[i].harga, daftar_barang[i].stok);
 
             printf("\033[1;33m===========================\033[0m\n");
-            
-            query_keranjang();
         } 
     }
 
-    if (!ditemukan) {
+    // Panggil query_keranjang di luar loop jika ditemukan barang
+    if (ditemukan) {
+        query_keranjang();
+    } else {
         printf("Barang tidak ditemukan.\n");
     }
 }
